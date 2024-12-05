@@ -4,15 +4,27 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:GitUtils.Wpf.View"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <StackPanel>
-            <CheckBox IsChecked="{Binding IsChecked}" Content="Select Item" Margin="5"/>
-            <TextBlock Text="{Binding Date}" Margin="5"/>
-            <TextBlock Text="{Binding CommitHash}" Margin="5"/>
-            <TextBlock Text="{Binding Author}" Margin="5"/>
-            <TextBlock Text="{Binding Message}" Margin="5"/>
-        </StackPanel>
-    </Grid>
+             mc:Ignorable="d">
+    <DataGrid ItemsSource="{Binding Items}" AutoGenerateColumns="False" Width="560" IsReadOnly="True">
+        <DataGrid.Columns>
+            <DataGridTemplateColumn Width="Auto">
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <CheckBox IsChecked="{Binding IsChecked}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+            <DataGridTextColumn Header="Date" Binding="{Binding Date}" Width="Auto"/>
+            <DataGridTextColumn Header="Commit Hash" Binding="{Binding CommitHash}" Width="Auto"/>
+            <DataGridTextColumn Header="Author" Binding="{Binding Author}" Width="Auto"/>
+            <DataGridTextColumn Header="Message" Binding="{Binding Message}" Width="*"/>
+            <DataGridTemplateColumn Header="Action" Width="Auto">
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <Button Content="Action" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,10,0"/>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+        </DataGrid.Columns>
+    </DataGrid>
 </UserControl>

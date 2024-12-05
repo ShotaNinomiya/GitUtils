@@ -10,31 +10,32 @@ namespace GitUtils.Wpf.View;
 /// </summary>
 public partial class FolderSelectorControl : UserControl
 {
-    public FolderSelectorViewModel ViewModel { get; set; }
 
     public FolderSelectorControl()
     {
         InitializeComponent();
-        ViewModel = new FolderSelectorViewModel();
-        DataContext = ViewModel;
+        DataContext = this;
     }
 
     private void SelectFolderButton_Click(object sender, RoutedEventArgs e)
     {
         // Configure open folder dialog box
-        OpenFolderDialog dialog = new()
+        var dialog = new OpenFolderDialog()
         {
             Multiselect = false,
             Title = "Select a folder"
         };
 
         // Show open folder dialog box
-        bool? result = dialog.ShowDialog();
+        var result = dialog.ShowDialog();
+        var folderName = dialog.FolderName;
 
         // Process open folder dialog box results
-        if (result == true && !string.IsNullOrWhiteSpace(dialog.FolderName))
-        {
-            SelectedFolderPath.Text = dialog.FolderName;
-        }
+        if (result != true || string.IsNullOrWhiteSpace(folderName)) return;
+
+        if (this.DataContext is not FolderSelectorViewModel vm) return;
+        
+        vm.SelectedFolderPath = folderName;
+        SelectedFolderPath.Text = folderName;
     }
 }

@@ -28,7 +28,79 @@ public partial class MainWindow : Window
                     Date = "2024/12/4 22:22",
                     IsChecked = true,
                     Message = "fix: 色々な修正をした。"
-                }
+                },
+                new ()
+                {
+                    Author = "ShotaNinomiya",
+                    CommitHash = "123abc",
+                    Date = "2024/12/4 22:23",
+                    IsChecked = true,
+                    Message = "fix: 色々な修正をした その２。"
+                },
+                new ()
+                {
+                    Author = "ShotaNinomiya",
+                    CommitHash = "123abc",
+                    Date = "2024/12/4 22:22",
+                    IsChecked = true,
+                    Message = "fix: 色々な修正をした。"
+                },
+                new ()
+                {
+                    Author = "ShotaNinomiya",
+                    CommitHash = "123abc",
+                    Date = "2024/12/4 22:23",
+                    IsChecked = true,
+                    Message = "fix: 色々な修正をした その２。"
+                },
+                new ()
+                {
+                    Author = "ShotaNinomiya",
+                    CommitHash = "123abc",
+                    Date = "2024/12/4 22:22",
+                    IsChecked = true,
+                    Message = "fix: 色々な修正をした。"
+                },
+                new ()
+                {
+                    Author = "ShotaNinomiya",
+                    CommitHash = "123abc",
+                    Date = "2024/12/4 22:23",
+                    IsChecked = true,
+                    Message = "fix: 色々な修正をした その２。"
+                },
+                new ()
+                {
+                    Author = "ShotaNinomiya",
+                    CommitHash = "123abc",
+                    Date = "2024/12/4 22:22",
+                    IsChecked = true,
+                    Message = "fix: 色々な修正をした。"
+                },
+                new ()
+                {
+                    Author = "ShotaNinomiya",
+                    CommitHash = "123abc",
+                    Date = "2024/12/4 22:23",
+                    IsChecked = true,
+                    Message = "fix: 色々な修正をした その２。"
+                },
+                new ()
+                {
+                    Author = "ShotaNinomiya",
+                    CommitHash = "123abc",
+                    Date = "2024/12/4 22:22",
+                    IsChecked = true,
+                    Message = "fix: 色々な修正をした。"
+                },
+                new ()
+                {
+                    Author = "ShotaNinomiya",
+                    CommitHash = "123abc",
+                    Date = "2024/12/4 22:23",
+                    IsChecked = true,
+                    Message = "fix: 色々な修正をした その２。"
+                },
             }
         };
         DataContext = ViewModel;

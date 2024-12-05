@@ -5,17 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GitUtils.Wpf.View"
         mc:Ignorable="d"
-        Title="GitUtil" Height="450" Width="800">
+        Title="GitUtil" Height="800" Width="600">
     <Grid>
-        <local:FolderSelectorControl HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,10,0" Width="360" DataContext="{Binding FolderSelectorViewModel}"/>
-        <local:CommitHashControl x:Name="AdditionalUserControl1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,90,10,0" Width="360" DataContext="{Binding AdditionalUserControl1ViewModel}"/>
-        <local:CommitHashControl x:Name="AdditionalUserControl2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,130,10,0" Width="360" DataContext="{Binding AdditionalUserControl2ViewModel}"/>
-        <ListBox ItemsSource="{Binding Items}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,170,10,0" Width="360" Height="200">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <local:CommitItemControl DataContext="{Binding}"/>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+        <StackPanel Orientation="Vertical">
+            <local:FolderSelectorControl HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" DataContext="{Binding FolderSelectorViewModel}"/>
+            <local:CommitHashControl x:Name="CommitHash1" HorizontalAlignment="Left" VerticalAlignment="Top" Width="560" DataContext="{Binding CommitHash1ViewModel}"/>
+            <local:CommitHashControl x:Name="CommitHash2" HorizontalAlignment="Left" VerticalAlignment="Top" Width="560" DataContext="{Binding CommitHash2ViewModel}"/>
+            <local:ButtonGroupControl/>
+            <local:CommitItemControl HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" DataContext="{Binding}"/>
+        </StackPanel>
     </Grid>
 </Window>

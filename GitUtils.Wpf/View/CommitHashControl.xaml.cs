@@ -8,12 +8,9 @@ namespace GitUtils.Wpf.View;
 /// </summary>
 public partial class CommitHashControl : UserControl
 {
-    public CommitHashViewModel ViewModel { get; set; }
-
     public CommitHashControl()
     {
         InitializeComponent();
-        ViewModel = new CommitHashViewModel();
-        DataContext = ViewModel;
+        DataContext = this;
     }
 }

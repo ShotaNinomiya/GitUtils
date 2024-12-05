@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="GitUtils.Wpf.View.CommitHashControl"
+﻿<UserControl x:Class="GitUtils.Wpf.View.ButtonGroupControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -6,9 +6,9 @@
              xmlns:local="clr-namespace:GitUtils.Wpf.View"
              mc:Ignorable="d">
     <Grid>
-        <StackPanel Orientation="Vertical">
-            <TextBlock Text="{Binding Name}"/>
-            <TextBox Text="{Binding CommitHash}" Name="CommitHashTextBox" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="0" Height="Auto"/>
+        <StackPanel Orientation="Horizontal" Height="20" VerticalAlignment="Top">
+            <Button Content="全選択"/>
+            <Button Content="選択コミット出力"/>
         </StackPanel>
     </Grid>
 </UserControl>
