@@ -1,4 +1,6 @@
-﻿namespace GitUtils.Wpf.ViewModel;
+﻿using GitUtils.Lib;
+
+namespace GitUtils.Wpf.ViewModel;
 
 public class CommitItemViewModel : BaseViewModel
 {
@@ -56,5 +58,13 @@ public class CommitItemViewModel : BaseViewModel
             _isChecked = value;
             OnPropertyChanged(nameof(IsChecked));
         }
+    }
+
+    public CommitItemViewModel(Commit commit)
+    {
+        this._author = commit.Author;
+        this._message = commit.Message;
+        this._date = commit.When.ToString();
+        this._commitHash = commit.CommitHash;
     }
 }

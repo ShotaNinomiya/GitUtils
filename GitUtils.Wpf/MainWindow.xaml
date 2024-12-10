@@ -3,16 +3,45 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:GitUtils.Wpf.View"
         mc:Ignorable="d"
         Title="GitUtil" Height="800" Width="600">
-    <Grid>
+    <Grid Margin="10">
         <StackPanel Orientation="Vertical">
-            <local:FolderSelectorControl HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" DataContext="{Binding FolderSelectorViewModel}"/>
-            <local:CommitHashControl x:Name="CommitHash1" HorizontalAlignment="Left" VerticalAlignment="Top" Width="560" DataContext="{Binding CommitHash1ViewModel}"/>
-            <local:CommitHashControl x:Name="CommitHash2" HorizontalAlignment="Left" VerticalAlignment="Top" Width="560" DataContext="{Binding CommitHash2ViewModel}"/>
-            <local:ButtonGroupControl/>
-            <local:CommitItemControl HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" DataContext="{Binding}"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                <Button Content="Select Folder" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="Auto" Click="SelectFolderButton_Click"/>
+                <TextBox Name="SelectedFolderPath" HorizontalAlignment="Left" Width="460" Height="Auto" IsReadOnly="True"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                <Button Content="Select Output Folder" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="Auto" Click="SelectedOutputFolder_OnClick"/>
+                <TextBox Name="SelectedOutputFolderPath" HorizontalAlignment="Left" Width="460" Height="Auto" IsReadOnly="True"/>
+            </StackPanel>
+            <StackPanel Orientation="Vertical">
+                <TextBlock x:Name="AfterTextBlock" Text="変更後コミット"/>
+                <TextBox Text="{Binding CommitHash}" Name="AfterCommitHashTextBox" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="0" Height="Auto" TextChanged="AfterCommitHashTextBox_OnTextChanged"/>
+            </StackPanel>
+            <StackPanel Orientation="Vertical">
+                <TextBlock x:Name="BeforeTextBlock" Text="変更前コミット"/>
+                <TextBox Text="{Binding CommitHash}" Name="BeforeCommitHashTextBox" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="0" Height="Auto" TextChanged="BeforeCommitHashTextBox_OnTextChanged"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Height="20" VerticalAlignment="Top">
+                <Button Name="SearchButton" Content="検索" Click="SearchButton_OnClick"/>
+                <Button Name="OutputButton" Content="選択コミット出力" Click="OutputButton_OnClick"/>
+            </StackPanel>
+            <DataGrid ItemsSource="{Binding Items}" AutoGenerateColumns="False" Width="560" IsReadOnly="True">
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Width="Auto">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="Date" Binding="{Binding Date}" Width="Auto"/>
+                    <DataGridTextColumn Header="Commit Hash" Binding="{Binding CommitHash}" Width="Auto"/>
+                    <DataGridTextColumn Header="Author" Binding="{Binding Author}" Width="Auto"/>
+                    <DataGridTextColumn Header="Message" Binding="{Binding Message}" Width="*"/>
+                </DataGrid.Columns>
+            </DataGrid>
         </StackPanel>
     </Grid>
 </Window>

@@ -9,7 +9,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Model\" />
+    <PackageReference Include="LibGit2Sharp" Version="0.30.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GitUtils.Lib\GitUtils.Lib.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="View\" />
   </ItemGroup>
 
 </Project>
