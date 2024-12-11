@@ -37,46 +37,144 @@ public class Repository
     {
         var previousCommit = startCommit.RawCommit;
         var nextCommit = endCommit.RawCommit;
+        var contentPath = Path.Combine(path, nextCommit.Id.Sha);
         var changes = _repository.Diff.Compare<TreeChanges>(previousCommit.Tree, nextCommit.Tree);
         foreach (var change in changes)
         {
-            // 変更後にファイルが存在する場合のみ出力
-            if (change.Status == ChangeKind.Added ||
-                change.Status == ChangeKind.Modified ||
-                change.Status == ChangeKind.Renamed ||
-                change.Status == ChangeKind.Copied)
+            switch (change.Status)
             {
-                // 対象ファイルのBlobを取得
-                var newBlob = nextCommit.Tree[change.Path]?.Target as Blob;
-                if (newBlob == null)
+                case ChangeKind.Added:
+                case ChangeKind.Modified:
+                case ChangeKind.Renamed:
+                case ChangeKind.Copied:
+                {
+                    if (nextCommit.Tree[change.Path]?.Target is not Blob newBlob)
+                    {
+                        // Blobが取得できない場合はスキップ
+                        continue;
+                    }
+
+                    var fileOutputPath = Path.Combine(contentPath, change.Path.Replace('/', Path.DirectorySeparatorChar));
+
+                    var directory = Path.GetDirectoryName(fileOutputPath);
+                    if (directory is null) continue;
+
+                    if (!Directory.Exists(directory))
+                    {
+                        Directory.CreateDirectory(directory);
+                    }
+
+                    Content.OutputFile(newBlob, fileOutputPath);
+
+                    break;
+                }
+                case ChangeKind.Deleted:
+                    break;
+                case ChangeKind.Unmodified:
+                    break;
+                case ChangeKind.Ignored:
+                    break;
+                case ChangeKind.Untracked:
+                    break;
+                case ChangeKind.TypeChanged:
+                    break;
+                case ChangeKind.Unreadable:
+                    break;
+                case ChangeKind.Conflicted:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+    }
+
+
+    // TODO: 後で名前変える
+    public void OutputChangesAndOldChanges(Commit firstCommit, Commit commit, string? selectedOutputFolderPath)
+    {
+        var previousCommit = firstCommit.RawCommit;
+        var nextCommit = commit.RawCommit;
+        var contentPath = Path.Combine(selectedOutputFolderPath, nextCommit.Id.Sha);
+        var changes = _repository.Diff.Compare<TreeChanges>(previousCommit.Tree, nextCommit.Tree);
+        foreach (var change in changes)
+        {
+            switch (change.Status)
+            {
+                case ChangeKind.Added:
+                case ChangeKind.Modified:
+                case ChangeKind.Renamed:
+                case ChangeKind.Copied:
+                {
+                    if (nextCommit.Tree[change.Path]?.Target is not Blob newBlob)
+                    {
+                        // Blobが取得できない場合はスキップ
+                        continue;
+                    }
+
+                    var fileOutputPath = Path.Combine(contentPath, change.Path.Replace('/', Path.DirectorySeparatorChar));
+
+                    var directory = Path.GetDirectoryName(fileOutputPath);
+                    if (directory is null) continue;
+
+                    if (!Directory.Exists(directory))
+                    {
+                        Directory.CreateDirectory(directory);
+                    }
+
+                    Content.OutputFile(newBlob, fileOutputPath);
+
+                    break;
+                }
+                case ChangeKind.Deleted:
+                    break;
+                case ChangeKind.Unmodified:
+                    break;
+                case ChangeKind.Ignored:
+                    break;
+                case ChangeKind.Untracked:
+                    break;
+                case ChangeKind.TypeChanged:
+                    break;
+                case ChangeKind.Unreadable:
+                    break;
+                case ChangeKind.Conflicted:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            var contentPath2 = Path.Combine(selectedOutputFolderPath, previousCommit.Id.Sha);
+            foreach (var change2 in changes)
+            {
+                // parentCommit側にファイルが存在する変更のみ抽出
+                // つまり Deleted, Modified, Renamed, Copied
+                // AddedはparentCommit側には存在しないので前の状態は無し
+                if (change2.Status != ChangeKind.Deleted &&
+                    change2.Status != ChangeKind.Modified &&
+                    change2.Status != ChangeKind.Renamed &&
+                    change2.Status != ChangeKind.Copied) continue;
+                // parentCommit側のファイルを取得（oldPathを使用）
+                var oldPath = change2.OldPath ?? change2.Path;
+                // Renamedの場合はOldPathが元のパス
+                // DeletedやModifiedでもOldPathが有効
+                Blob oldBlob = previousCommit.Tree[oldPath]?.Target as Blob;
+
+                if (oldBlob == null)
                 {
                     // Blobが取得できない場合はスキップ
                     continue;
                 }
 
-                // 出力するファイルのパスを作成
-                string fileOutputPath = Path.Combine(path, change.Path.Replace('/', Path.DirectorySeparatorChar));
-
-                // ディレクトリが存在しない場合は作成
+                // 出力先ファイルパス
+                string fileOutputPath = Path.Combine(contentPath2, oldPath.Replace('/', Path.DirectorySeparatorChar));
                 string directory = Path.GetDirectoryName(fileOutputPath);
                 if (!Directory.Exists(directory))
                 {
                     Directory.CreateDirectory(directory);
                 }
 
-                // ファイルを出力
-                using (var contentStream = newBlob.GetContentStream())
-                using (var fileStream = File.Create(fileOutputPath))
-                {
-                    contentStream.CopyTo(fileStream);
-                }
-
-                Console.WriteLine($"出力: {fileOutputPath} (変更タイプ: {change.Status})");
-            }
-            else if (change.Status == ChangeKind.Deleted)
-            {
-                // 削除されたファイルは新規コンテンツがないため今回はスキップ
-                // 必要に応じて、削除されたファイル一覧を出力するなどの対応を行ってください
+                // ファイル出力
+                Content.OutputFile(oldBlob, fileOutputPath);
             }
         }
     }

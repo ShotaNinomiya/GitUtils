@@ -26,6 +26,7 @@
             <StackPanel Orientation="Horizontal" Height="20" VerticalAlignment="Top">
                 <Button Name="SearchButton" Content="検索" Click="SearchButton_OnClick"/>
                 <Button Name="OutputButton" Content="選択コミット出力" Click="OutputButton_OnClick"/>
+                <Button Name="OutputButton2" Content="選択コミット出力" Click="OutputButton2_OnClick"/>
             </StackPanel>
             <DataGrid ItemsSource="{Binding Items}" AutoGenerateColumns="False" Width="560" IsReadOnly="True">
                 <DataGrid.Columns>

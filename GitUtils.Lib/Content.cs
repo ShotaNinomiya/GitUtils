@@ -4,11 +4,11 @@ namespace GitUtils.Lib;
 
 public static class Content
 {
-    public static string Read(Blob blob)
+    public static void OutputFile(Blob blob, string fileOutputPath)
     {
         using var contentStream = blob.GetContentStream();
-        using var reader = new StreamReader(contentStream);
-        return reader.ReadToEnd();
+        using var fileStream = File.Create(fileOutputPath);
+        contentStream.CopyTo(fileStream);
     }
 
     public static void ExtractTreeEntryFromCommit(Commit commit, string currentPath)

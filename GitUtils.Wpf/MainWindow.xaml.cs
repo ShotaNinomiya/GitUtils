@@ -90,4 +90,11 @@ public partial class MainWindow : Window
 
         vm.OutputFiles();
     }
+
+    private void OutputButton2_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (this.DataContext is not MainWindowViewModel vm) return;
+
+        vm.OutputFiles2();
+    }
 }

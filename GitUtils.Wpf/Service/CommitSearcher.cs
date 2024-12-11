@@ -25,4 +25,6 @@ public class CommitSearcher : ISearchCommit
         var afterCommit = repo.GetCommit(afterCommitHash.Hash);
         return repo.GetLog(beforeCommit, afterCommit);
     }
+
+
 }

@@ -109,8 +109,25 @@ public class MainWindowViewModel : BaseViewModel
                 return;
             }
 
+            // TODO: ViewModelは知りたくない
             var repo = new Repository(this.SelectedFolderPath);
             repo.OutputChanges(previousCommit, commit, this.SelectedOutputFolderPath);
+        }
+    }
+
+    public void OutputFiles2()
+    {
+        var firstCommitViewModel = Items.First();
+        var firstCommit = _searchCommit.SearchCommit(this.SelectedFolderPath, new CommitHash() { Hash = firstCommitViewModel.CommitHash });
+        foreach (var vm in Items.Skip(1))
+        {
+            if (!vm.IsChecked) continue;
+
+            var commit = _searchCommit.SearchCommit(this.SelectedFolderPath, new CommitHash() { Hash = vm.CommitHash });
+
+            // TODO: ViewModelは知りたくない
+            var repo = new Repository(this.SelectedFolderPath);
+            repo.OutputChangesAndOldChanges(firstCommit, commit, this.SelectedOutputFolderPath);
         }
     }
 }
