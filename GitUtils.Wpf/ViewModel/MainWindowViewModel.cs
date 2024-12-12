@@ -1,33 +1,32 @@
-﻿using GitUtils.Wpf.Model;
-using GitUtils.Wpf.Service;
-using Microsoft.Extensions.DependencyInjection;
+﻿using GitUtils.Lib;
+using GitUtils.Wpf.Model;
+using GitUtils.Wpf.Service.Interface;
 using System.Collections.ObjectModel;
 using System.IO;
-using GitUtils.Lib;
 
 namespace GitUtils.Wpf.ViewModel;
 
 public class MainWindowViewModel : BaseViewModel
 {
-    private string? _selectedFolderPath;
-    private string? _selectedOutputFolderPath;
+    private string _selectedInputFolderPath;
+    private string _selectedOutputFolderPath;
     private ObservableCollection<CommitItemViewModel> _items;
-    private readonly CommitHash _beforeCommitHash;
-    private readonly CommitHash _afterCommitHash;
+    private CommitHash _beforeCommitHash;
+    private CommitHash _afterCommitHash;
     private readonly ISearchCommit _searchCommit;
 
 
-    public string? SelectedFolderPath
+    public string SelectedInputFolderPath
     {
-        get => _selectedFolderPath;
+        get => _selectedInputFolderPath;
         set
         {
-            _selectedFolderPath = value;
-            OnPropertyChanged(nameof(SelectedFolderPath));
+            _selectedInputFolderPath = value;
+            OnPropertyChanged(nameof(SelectedInputFolderPath));
         }
     }
 
-    public string? SelectedOutputFolderPath
+    public string SelectedOutputFolderPath
     {
         get => _selectedOutputFolderPath;
         set
@@ -42,28 +41,22 @@ public class MainWindowViewModel : BaseViewModel
         }
     }
 
-    public string BeforeCommitHash
+    public CommitHash BeforeCommitHash
     {
-        get => _beforeCommitHash.Hash;
+        get => _beforeCommitHash;
         set
         {
-            if (string.IsNullOrEmpty(value)
-                || _beforeCommitHash.Hash == value) return;
-
-            _beforeCommitHash.Hash = value;
+            _beforeCommitHash = value;
             OnPropertyChanged(nameof(BeforeCommitHash));
         }
     }
 
-    public string AfterCommitHash
+    public CommitHash AfterCommitHash
     {
-        get => _afterCommitHash.Hash;
+        get => _afterCommitHash;
         set
         {
-            if (string.IsNullOrEmpty(value)
-                || _afterCommitHash.Hash == value) return;
-
-            _afterCommitHash.Hash = value;
+            _afterCommitHash = value;
             OnPropertyChanged(nameof(AfterCommitHash));
         }
     }
@@ -81,26 +74,31 @@ public class MainWindowViewModel : BaseViewModel
     public MainWindowViewModel(ISearchCommit searchCommit)
     {
         this._searchCommit = searchCommit;
-        this._beforeCommitHash = new CommitHash();
-        this._afterCommitHash = new CommitHash();
+        this._selectedOutputFolderPath = string.Empty;
+        this._selectedInputFolderPath = string.Empty;
+        this._beforeCommitHash = CommitHash.EmptyHash;
+        this._afterCommitHash = CommitHash.EmptyHash;
         this._items = new ObservableCollection<CommitItemViewModel>();
     }
 
     public void GetCommits()
     {
-        if (string.IsNullOrEmpty(this.SelectedFolderPath)) return;
+        if (string.IsNullOrEmpty(this.SelectedInputFolderPath)) return;
 
-        var commits = _searchCommit.SearchCommits(this.SelectedFolderPath, this._beforeCommitHash, this._afterCommitHash);
+        var commits = _searchCommit.SearchCommits(this.SelectedInputFolderPath, this._beforeCommitHash, this._afterCommitHash);
         Items = new ObservableCollection<CommitItemViewModel>(commits.Select(x=> new CommitItemViewModel(x)));
     }
 
     public void OutputFiles()
     {
+        if (IsValidFolderPath()) return;
+
         foreach (var vm in Items)
         {
             if (!vm.IsChecked) continue;
 
-            var commit = _searchCommit.SearchCommit(this.SelectedFolderPath, new CommitHash() { Hash = vm.CommitHash });
+            var commitHash = CommitHash.CreateCommitHash(vm.CommitHash);
+            var commit = _searchCommit.SearchCommit(this.SelectedInputFolderPath, commitHash);
             
             var previousCommit = commit.Parents.FirstOrDefault();
             if (previousCommit is null)
@@ -110,24 +108,35 @@ public class MainWindowViewModel : BaseViewModel
             }
 
             // TODO: ViewModelは知りたくない
-            var repo = new Repository(this.SelectedFolderPath);
+            var repo = new Repository(this.SelectedInputFolderPath);
             repo.OutputChanges(previousCommit, commit, this.SelectedOutputFolderPath);
         }
     }
 
     public void OutputFiles2()
     {
+        if (IsValidFolderPath()) return;
+
         var firstCommitViewModel = Items.First();
-        var firstCommit = _searchCommit.SearchCommit(this.SelectedFolderPath, new CommitHash() { Hash = firstCommitViewModel.CommitHash });
+        var firstCommitHash = CommitHash.CreateCommitHash(firstCommitViewModel.CommitHash);
+        var firstCommit = _searchCommit.SearchCommit(this.SelectedInputFolderPath, firstCommitHash);
+        // TODO: コミットが一つだった場合
         foreach (var vm in Items.Skip(1))
         {
             if (!vm.IsChecked) continue;
-
-            var commit = _searchCommit.SearchCommit(this.SelectedFolderPath, new CommitHash() { Hash = vm.CommitHash });
+            var commitHash = CommitHash.CreateCommitHash(vm.CommitHash);
+            var commit = _searchCommit.SearchCommit(this.SelectedInputFolderPath, commitHash);
 
             // TODO: ViewModelは知りたくない
-            var repo = new Repository(this.SelectedFolderPath);
+            var repo = new Repository(this.SelectedInputFolderPath);
             repo.OutputChangesAndOldChanges(firstCommit, commit, this.SelectedOutputFolderPath);
         }
+    }
+
+    private bool IsValidFolderPath()
+    {
+        // TODO: 正規表現とかで絞りたい
+        return string.IsNullOrEmpty(this.SelectedInputFolderPath)
+               && string.IsNullOrEmpty(this.SelectedOutputFolderPath);
     }
 }

@@ -1,8 +1,8 @@
-﻿using GitUtils.Wpf.Service;
-using GitUtils.Wpf.ViewModel;
+﻿using GitUtils.Wpf.ViewModel;
 using Microsoft.Win32;
 using System.Windows;
 using System.Windows.Controls;
+using GitUtils.Wpf.Model;
 
 namespace GitUtils.Wpf;
 
@@ -35,7 +35,7 @@ public partial class MainWindow : Window
 
         if (this.DataContext is not MainWindowViewModel vm) return;
 
-        vm.SelectedFolderPath = folderName;
+        vm.SelectedInputFolderPath = folderName;
         this.SelectedFolderPath.Text = folderName;
     }
 
@@ -66,7 +66,7 @@ public partial class MainWindow : Window
         if (sender is not TextBox textBox) return;
         if (this.DataContext is not MainWindowViewModel vm) return;
 
-        vm.AfterCommitHash = textBox.Text;
+        vm.AfterCommitHash = CommitHash.CreateCommitHash(textBox.Text);
     }
 
     private void BeforeCommitHashTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
@@ -74,7 +74,7 @@ public partial class MainWindow : Window
         if (sender is not TextBox textBox) return;
         if (this.DataContext is not MainWindowViewModel vm) return;
 
-        vm.BeforeCommitHash = textBox.Text;
+        vm.BeforeCommitHash = CommitHash.CreateCommitHash(textBox.Text);
     }
 
     private void SearchButton_OnClick(object sender, RoutedEventArgs e)

@@ -8,8 +8,8 @@
     <Grid Margin="10">
         <StackPanel Orientation="Vertical">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="2">
-                <Button Content="Select Folder" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="Auto" Click="SelectFolderButton_Click"/>
-                <TextBox Name="SelectedFolderPath" HorizontalAlignment="Left" Width="460" Height="Auto" IsReadOnly="True"/>
+                <Button Content="Git Folder" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="Auto" Click="SelectFolderButton_Click"/>
+                <TextBox Name="Output Folder" HorizontalAlignment="Left" Width="460" Height="Auto" IsReadOnly="True"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="2">
                 <Button Content="Select Output Folder" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="Auto" Click="SelectedOutputFolder_OnClick"/>

@@ -1,16 +1,17 @@
 ﻿using GitUtils.Lib;
+using GitUtils.Wpf.Model;
 
 namespace GitUtils.Wpf.ViewModel;
 
 public class CommitItemViewModel : BaseViewModel
 {
-    private string? _date;
-    private string? _commitHash;
-    private string? _author;
-    private string? _message;
+    private string _date;
+    private CommitHash _commitHash;
+    private string _author;
+    private string _message;
     private bool _isChecked;
 
-    public string? Date
+    public string Date
     {
         get => _date;
         set
@@ -20,17 +21,19 @@ public class CommitItemViewModel : BaseViewModel
         }
     }
 
-    public string? CommitHash
+    public string CommitHash
     {
-        get => _commitHash;
+        get => _commitHash.Hash;
         set
         {
-            _commitHash = value;
+            _commitHash = Model.CommitHash.CreateCommitHash(value);
             OnPropertyChanged(nameof(CommitHash));
         }
     }
 
-    public string? Author
+    public string CommitHashShort => _commitHash.HashShort;
+
+    public string Author
     {
         get => _author;
         set
@@ -40,7 +43,7 @@ public class CommitItemViewModel : BaseViewModel
         }
     }
 
-    public string? Message
+    public string Message
     {
         get => _message;
         set
@@ -65,6 +68,6 @@ public class CommitItemViewModel : BaseViewModel
         this._author = commit.Author;
         this._message = commit.Message;
         this._date = commit.When.ToString();
-        this._commitHash = commit.CommitHash;
+        this._commitHash = Model.CommitHash.CreateCommitHash(commit.CommitHash);
     }
 }

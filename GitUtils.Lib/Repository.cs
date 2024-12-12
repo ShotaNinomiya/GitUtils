@@ -143,39 +143,31 @@ public class Repository
                     throw new ArgumentOutOfRangeException();
             }
 
-            var contentPath2 = Path.Combine(selectedOutputFolderPath, previousCommit.Id.Sha);
-            foreach (var change2 in changes)
+        }
+        var contentPath2 = Path.Combine(selectedOutputFolderPath, previousCommit.Id.Sha);
+        foreach (var change2 in changes)
+        {
+            if (change2.Status != ChangeKind.Deleted &&
+                change2.Status != ChangeKind.Modified &&
+                change2.Status != ChangeKind.Renamed &&
+                change2.Status != ChangeKind.Copied) continue;
+            var oldPath = change2.OldPath ?? change2.Path;
+
+            if (previousCommit.Tree[oldPath]?.Target is not Blob oldBlob)
             {
-                // parentCommit側にファイルが存在する変更のみ抽出
-                // つまり Deleted, Modified, Renamed, Copied
-                // AddedはparentCommit側には存在しないので前の状態は無し
-                if (change2.Status != ChangeKind.Deleted &&
-                    change2.Status != ChangeKind.Modified &&
-                    change2.Status != ChangeKind.Renamed &&
-                    change2.Status != ChangeKind.Copied) continue;
-                // parentCommit側のファイルを取得（oldPathを使用）
-                var oldPath = change2.OldPath ?? change2.Path;
-                // Renamedの場合はOldPathが元のパス
-                // DeletedやModifiedでもOldPathが有効
-                Blob oldBlob = previousCommit.Tree[oldPath]?.Target as Blob;
-
-                if (oldBlob == null)
-                {
-                    // Blobが取得できない場合はスキップ
-                    continue;
-                }
-
-                // 出力先ファイルパス
-                string fileOutputPath = Path.Combine(contentPath2, oldPath.Replace('/', Path.DirectorySeparatorChar));
-                string directory = Path.GetDirectoryName(fileOutputPath);
-                if (!Directory.Exists(directory))
-                {
-                    Directory.CreateDirectory(directory);
-                }
-
-                // ファイル出力
-                Content.OutputFile(oldBlob, fileOutputPath);
+                continue;
             }
+
+            // 出力先ファイルパス
+            string fileOutputPath = Path.Combine(contentPath2, oldPath.Replace('/', Path.DirectorySeparatorChar));
+            string directory = Path.GetDirectoryName(fileOutputPath);
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
+            // ファイル出力
+            Content.OutputFile(oldBlob, fileOutputPath);
         }
     }
 }

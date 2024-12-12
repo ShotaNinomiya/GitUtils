@@ -1,7 +1,7 @@
 ﻿using GitUtils.Lib;
 using GitUtils.Wpf.Model;
 
-namespace GitUtils.Wpf.Service;
+namespace GitUtils.Wpf.Service.Interface;
 
 public interface ISearchCommit
 {

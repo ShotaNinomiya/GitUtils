@@ -2,6 +2,7 @@
 using System.Windows;
 using GitUtils.Wpf.Service;
 using GitUtils.Wpf.ViewModel;
+using GitUtils.Wpf.Service.Interface;
 
 namespace GitUtils.Wpf;
 
@@ -34,5 +35,6 @@ public partial class App : Application
 
         // 他のサービス
         services.AddTransient<ISearchCommit, CommitSearcher>();
+        services.AddTransient<IRepositoryCreator, RepositoryCreator>();
     }
 }
