@@ -7,28 +7,28 @@
         Title="GitUtil" Height="800" Width="600">
     <Grid Margin="10">
         <StackPanel Orientation="Vertical">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="2">
                 <Button Content="Select Folder" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="Auto" Click="SelectFolderButton_Click"/>
                 <TextBox Name="SelectedFolderPath" HorizontalAlignment="Left" Width="460" Height="Auto" IsReadOnly="True"/>
             </StackPanel>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="2">
                 <Button Content="Select Output Folder" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="Auto" Click="SelectedOutputFolder_OnClick"/>
                 <TextBox Name="SelectedOutputFolderPath" HorizontalAlignment="Left" Width="460" Height="Auto" IsReadOnly="True"/>
             </StackPanel>
-            <StackPanel Orientation="Vertical">
+            <StackPanel Orientation="Vertical" Margin="2">
                 <TextBlock x:Name="AfterTextBlock" Text="変更後コミット"/>
-                <TextBox Text="{Binding CommitHash}" Name="AfterCommitHashTextBox" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="0" Height="Auto" TextChanged="AfterCommitHashTextBox_OnTextChanged"/>
+                <TextBox Name="AfterCommitHashTextBox" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="0" Height="Auto" TextChanged="AfterCommitHashTextBox_OnTextChanged"/>
             </StackPanel>
-            <StackPanel Orientation="Vertical">
+            <StackPanel Orientation="Vertical" Margin="2">
                 <TextBlock x:Name="BeforeTextBlock" Text="変更前コミット"/>
-                <TextBox Text="{Binding CommitHash}" Name="BeforeCommitHashTextBox" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="0" Height="Auto" TextChanged="BeforeCommitHashTextBox_OnTextChanged"/>
+                <TextBox Name="BeforeCommitHashTextBox" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="0" Height="Auto" TextChanged="BeforeCommitHashTextBox_OnTextChanged"/>
             </StackPanel>
-            <StackPanel Orientation="Horizontal" Height="20" VerticalAlignment="Top">
+            <StackPanel Orientation="Horizontal" Height="20" VerticalAlignment="Top" Margin="2">
                 <Button Name="SearchButton" Content="検索" Click="SearchButton_OnClick"/>
-                <Button Name="OutputButton" Content="選択コミット出力" Click="OutputButton_OnClick"/>
-                <Button Name="OutputButton2" Content="選択コミット出力" Click="OutputButton2_OnClick"/>
+                <Button Name="OutputButton" Content="直前差分出力" Click="OutputButton_OnClick"/>
+                <Button Name="OutputButton2" Content="コード差分出力" Click="OutputButton2_OnClick"/>
             </StackPanel>
-            <DataGrid ItemsSource="{Binding Items}" AutoGenerateColumns="False" Width="560" IsReadOnly="True">
+            <DataGrid ItemsSource="{Binding Items}" AutoGenerateColumns="False" Width="560" IsReadOnly="True" Margin="2">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn Width="Auto">
                         <DataGridTemplateColumn.CellTemplate>
@@ -38,9 +38,9 @@
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                     <DataGridTextColumn Header="Date" Binding="{Binding Date}" Width="Auto"/>
-                    <DataGridTextColumn Header="Commit Hash" Binding="{Binding CommitHash}" Width="Auto"/>
-                    <DataGridTextColumn Header="Author" Binding="{Binding Author}" Width="Auto"/>
-                    <DataGridTextColumn Header="Message" Binding="{Binding Message}" Width="*"/>
+                    <DataGridTextColumn Header="Commit" Binding="{Binding CommitHashShort}" Width="Auto"/>
+                    <DataGridTextColumn Header="Author" Binding="{Binding Author}" Width="100"/>
+                    <DataGridTextColumn Header="Message" Binding="{Binding Message}" Width="300"/>
                 </DataGrid.Columns>
             </DataGrid>
         </StackPanel>
